@@ -24,7 +24,7 @@ export default function SignUp() {
 
     try {
       setLoading(true);
-
+      
     const res = await fetch('/api/auth/signup',
     {
       method: 'POST',
