@@ -2,6 +2,7 @@ import React from 'react'
 import {FaSearch} from 'react-icons/fa';
 import {Link} from 'react-router-dom'
 import { useSelector } from 'react-redux';
+import profilePic from '../assets/profile_image_default.png'
 
 export default function Header() {
 
@@ -36,7 +37,7 @@ export default function Header() {
                 <Link to='/profile'>
 
                     {currentUser ? (
-                        <img  className='rounded-full h-7 w-7' src={currentUser.avatar} alt ='profile'/>
+                        <img  className='rounded-full h-8 w-8 ml-3' src={profilePic} alt ='profile'/>
                     ) : (
                     <li className='text-slate-700 hover:underline cursor-pointer font-semibold'>
                         Sign In</li>
