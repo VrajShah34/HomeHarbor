@@ -1,9 +1,12 @@
 import React from 'react'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { useRef , useState, useEffect} from 'react';
-import profilePic from '../assets/profile_image_default.png'
+import default_profilePic from '../assets/profile_image_default.png'
 import {getDownloadURL, getStorage, ref, uploadBytesResumable} from 'firebase/storage'
 import { app } from '../firebase';
+import { updateUserFailure,updateUserStart, updateUserSuccess } from '../redux/user/userSlice';
+import { set } from 'mongoose';
+
 
 
 // //firestore storage -
@@ -14,13 +17,17 @@ import { app } from '../firebase';
 
 export default function Profile() {
 
-  const {currentUser} = useSelector((state) => state.user);
   const fileRef = useRef(null);
+  const {currentUser, loading, error} = useSelector((state) => state.user);
+  
   const [file,setFile] = useState(undefined);
   // console.log(file);
   const [filePerc, setFilePerc] = useState(0);
   const [fileUploadError, setFileUploadError] = useState(false);
   const [formData, setFormData] = useState({});
+  const [updateSuccess, setUpdateSuccess] = useState(false);
+
+  const dispatch = useDispatch();
 
 
 
@@ -56,15 +63,49 @@ export default function Profile() {
 
   }
 
+  const handleChange = (e) => {
+        setFormData({...formData, [e.target.id]:e.target.value})
+  }
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      dispatch(updateUserStart());
+        const res = await fetch(`/api/user/update/${currentUser._id}`
+        , {
+          method: 'POST',
+          headers:{
+            'Content-Type': 'application/json',
+
+          },
+          body: JSON.stringify(formData),
+        });
+
+        const data = await res.json();
+
+        if(data.success === false){
+          dispatch(updateUserFailure(data.message));
+          return;
+        }
+
+        dispatch(updateUserSuccess(data));
+        setUpdateSuccess(true);
+      
+    } catch (error) {
+        dispatch(updateUserFailure(error.message));
+    }
+  }
+
   return (
     <div className='p-3 max-w-lg  mx-auto'>
       <h1 className='text-3xl text-center font-semibold my-7'> Profile</h1>
-      <form className='flex flex-col gap-4'>
+      <form onSubmit={handleSubmit} className='flex flex-col gap-4'>
 
           <input type="file" ref = {fileRef} hidden accept='image/*'
           onChange={(e) => setFile(e.target.files[0])}/>
 
-          <img onClick={() => fileRef.current.click()} src ={formData.avatar || profilePic} alt='profile' 
+          <img onClick={() => fileRef.current.click()} src ={formData.avatar || default_profilePic} alt='profile' 
           className='rounded-full h-24 w-24 object-cover self-center mt-2 cursor-pointer'
           />
 
@@ -83,12 +124,28 @@ export default function Profile() {
           </p>
           
 
-          <input type='text' placeholder='Username' className='border p-3 rounded-lg' id='username'/>
-          <input type='email' placeholder='email' className='border p-3 rounded-lg' id='email'/>
-          <input type='text' placeholder='password' className='border p-3 rounded-lg' id='password'/>
+          <input type='text' 
+          placeholder='Username' 
+          defaultValue={currentUser.username}
+          className='border p-3 rounded-lg' 
+          onChange={handleChange}
+          id='username'/>
+          <input 
+            type='email'
+           placeholder='email'
+           defaultValue={currentUser.email}
+            className='border p-3 rounded-lg'
+            onChange={handleChange} 
+            id='email'/>
+          <input 
+            type='password' 
+            placeholder='password' 
+            className='border p-3 rounded-lg' 
+            onChange={handleChange}
+            id='password'/>
 
-          <button className='bg-slate-700 text-white rounded-lg p-3 uppercase size max-w-sm
-          hover:opacity-90 disabled:opacity-80 mt-7'>Update</button>
+          <button disabled={loading} className='bg-slate-700 text-white rounded-lg p-3 uppercase size max-w-sm
+          hover:opacity-90 disabled:opacity-80 mt-7'>{loading? 'Loading...':'Update'}</button>
 
       </form>
 
@@ -98,6 +155,8 @@ export default function Profile() {
         
       </div>
 
+            <p className='text-red-700 mt-5'>{error?error:""}</p>
+            <p className='text-green-700'>{updateSuccess?'User Updated Successfully' : ""}</p>
     </div>
 
   )
