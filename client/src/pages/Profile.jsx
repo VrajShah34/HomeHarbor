@@ -120,7 +120,7 @@ export default function Profile() {
 
   return (
     <div className='p-3 max-w-lg  mx-auto'>
-      <h1 className='text-3xl text-center font-semibold my-7'> Profile</h1>
+      <h1 className='text-3xl text-center font-semibold my-9'> Profile</h1>
       <form onSubmit={handleSubmit} className='flex flex-col gap-4'>
 
           <input type="file" ref = {fileRef} hidden accept='image/*'
