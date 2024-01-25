@@ -6,6 +6,7 @@ import {getDownloadURL, getStorage, ref, uploadBytesResumable} from 'firebase/st
 import { app } from '../firebase';
 import { deleteUserFailure, deleteUserStart, deleteUserSuccess, signInFailure, signOutUserFailure, signOutUserStart, signOutUserSuccess, updateUserFailure,updateUserStart, updateUserSuccess } from '../redux/user/userSlice';
 import { set } from 'mongoose';
+import{Link} from 'react-router-dom';
 
 
 
@@ -181,7 +182,15 @@ export default function Profile() {
             id='password'/>
 
           <button disabled={loading} className='bg-slate-700 text-white rounded-lg p-3 uppercase size max-w-sm
-          hover:opacity-90 disabled:opacity-80 mt-7'>{loading? 'Loading...':'Update'}</button>
+          hover:opacity-90 disabled:opacity-80 mt-7'>{loading? 'Loading...':'Update'}
+          </button>
+
+          <Link  className='bg-green-700 text-white p-3 rounded-lg uppercase text-center
+          hover:opacity-90' to={"/create-listing"}>
+            Create Listing
+          </Link>
+
+
 
       </form>
 
