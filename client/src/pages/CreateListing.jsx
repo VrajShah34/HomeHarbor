@@ -27,11 +27,14 @@ export default function CreateListing() {
     parking: false,
     furnished: false,
   });
+
   const [imageUploadError, setImageUploadError] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(false);
   console.log(formData);
+
+
   const handleImageSubmit = (e) => {
     if (files.length > 0 && files.length + formData.imageUrls.length < 7) {
       setUploading(true);
@@ -132,6 +135,7 @@ export default function CreateListing() {
         return setError('Discount price must be lower than regular price');
       setLoading(true);
       setError(false);
+
       const res = await fetch('/api/listing/create', {
         method: 'POST',
         headers: {
@@ -142,6 +146,7 @@ export default function CreateListing() {
           userRef: currentUser._id,
         }),
       });
+      
       const data = await res.json();
       setLoading(false);
       if (data.success === false) {
@@ -155,9 +160,11 @@ export default function CreateListing() {
   };
   return (
     <main className='p-3 max-w-4xl mx-auto'>
+
       <h1 className='text-3xl font-semibold text-center my-7'>
         Create a Listing
       </h1>
+
       <form onSubmit={handleSubmit} className='flex flex-col sm:flex-row gap-4'>
         <div className='flex flex-col gap-4 flex-1'>
           <input
@@ -189,6 +196,7 @@ export default function CreateListing() {
             onChange={handleChange}
             value={formData.address}
           />
+
           <div className='flex gap-6 flex-wrap'>
             <div className='flex gap-2'>
               <input
@@ -200,6 +208,7 @@ export default function CreateListing() {
               />
               <span>Sell</span>
             </div>
+
             <div className='flex gap-2'>
               <input
                 type='checkbox'
@@ -210,6 +219,7 @@ export default function CreateListing() {
               />
               <span>Rent</span>
             </div>
+
             <div className='flex gap-2'>
               <input
                 type='checkbox'
@@ -220,6 +230,7 @@ export default function CreateListing() {
               />
               <span>Parking spot</span>
             </div>
+
             <div className='flex gap-2'>
               <input
                 type='checkbox'
@@ -230,6 +241,7 @@ export default function CreateListing() {
               />
               <span>Furnished</span>
             </div>
+
             <div className='flex gap-2'>
               <input
                 type='checkbox'
@@ -240,7 +252,10 @@ export default function CreateListing() {
               />
               <span>Offer</span>
             </div>
+
           </div>
+
+
           <div className='flex flex-wrap gap-6'>
             <div className='flex items-center gap-2'>
               <input
@@ -255,6 +270,7 @@ export default function CreateListing() {
               />
               <p>Beds</p>
             </div>
+
             <div className='flex items-center gap-2'>
               <input
                 type='number'
@@ -268,6 +284,7 @@ export default function CreateListing() {
               />
               <p>Baths</p>
             </div>
+
             <div className='flex items-center gap-2'>
               <input
                 type='number'
@@ -286,6 +303,7 @@ export default function CreateListing() {
                 )}
               </div>
             </div>
+
             {formData.offer && (
               <div className='flex items-center gap-2'>
                 <input
@@ -309,6 +327,8 @@ export default function CreateListing() {
             )}
           </div>
         </div>
+
+
         <div className='flex flex-col flex-1 gap-4'>
           <p className='font-semibold'>
             Images:
@@ -325,6 +345,7 @@ export default function CreateListing() {
               accept='image/*'
               multiple
             />
+
             <button
               type='button'
               disabled={uploading}
@@ -334,6 +355,7 @@ export default function CreateListing() {
               {uploading ? 'Uploading...' : 'Upload'}
             </button>
           </div>
+
           <p className='text-red-700 text-sm'>
             {imageUploadError && imageUploadError}
           </p>
@@ -357,12 +379,14 @@ export default function CreateListing() {
                 </button>
               </div>
             ))}
+
           <button
             disabled={loading || uploading}
             className='p-3 bg-slate-700 text-white rounded-lg uppercase hover:opacity-95 disabled:opacity-80'
           >
             {loading ? 'Creating...' : 'Create listing'}
           </button>
+
           {error && <p className='text-red-700 text-sm'>{error}</p>}
         </div>
       </form>
