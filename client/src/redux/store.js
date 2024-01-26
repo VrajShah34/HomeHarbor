@@ -8,7 +8,7 @@ import persistStore from 'redux-persist/es/persistStore'
 const rootReducer = combineReducers({user: userReducer})
 
 const persistConfig = {
-    key: rootReducer,
+    key: 'root',
     storage,
     version: 1
 }
