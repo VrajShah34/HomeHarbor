@@ -6,7 +6,13 @@ import profilePic from '../assets/profile_image_default.png'
 
 export default function Header() {
 
-    const {currentUser} = useSelector((state) => state.user)
+    const {currentUser} = useSelector((state) => state.user);
+    const [searchTerm, setSearchTerm] = useState('');   
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        
+    }
 
   return (
     <header className='bg-cyan-100 shadow-md'>
@@ -19,11 +25,18 @@ export default function Header() {
             </h1>
             </Link>
 
-            <form className='bg-white p-3 rounded-lg flex items-center'>
-                <input type='text' placeholder='Search...' 
-                className='bg-transparent focus:outline-none w-24 sm:w-64'
+            <form onSubmit={handleSubmit} className='bg-white p-3 rounded-lg flex items-center'>
+                <input 
+                 type='text'
+                 placeholder='Search...' 
+                 className='bg-transparent focus:outline-none w-24 sm:w-64'
+                 value={searchTerm}
+                 onChange={(e) => setSearchTerm(e.target.value)}
                 />
-                <FaSearch className='text-slate-600'/>
+                <button>
+                    <FaSearch className='text-slate-600'/>
+                </button>
+                
             </form>
 
             <ul className='flex gap-5 '>
