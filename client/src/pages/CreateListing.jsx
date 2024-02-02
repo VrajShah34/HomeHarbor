@@ -337,20 +337,33 @@ export default function CreateListing() {
             </span>
           </p>
           <div className='flex gap-4'>
-            <input
+            {/* <input
               onChange={(e) => setFiles(e.target.files)}
               className='p-3 border border-gray-300 rounded w-full'
               type='file'
               id='images'
               accept='image/*'
               multiple
+            /> */}
+
+            <input
+                onChange={(e) => setFiles(e.target.files)}
+                class='hidden'
+                type='file'
+                id='images'
+                accept='image/*'
+                multiple
             />
+            <label for="images" class="cursor-pointer inline-block bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded">
+                Choose File
+            </label>
+
 
             <button
               type='button'
               disabled={uploading}
               onClick={handleImageSubmit}
-              className='p-3 text-green-700 border border-green-700 rounded uppercase hover:shadow-lg disabled:opacity-80'
+              className='p-3 bg-green-600 text-white  border border-green-700 rounded uppercase hover:shadow-lg disabled:opacity-80'
             >
               {uploading ? 'Uploading...' : 'Upload'}
             </button>
